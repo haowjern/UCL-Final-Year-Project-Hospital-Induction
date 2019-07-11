@@ -11,13 +11,23 @@ import {MatListModule} from '@angular/material/list';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { EditorComponent } from './components/editor/editor.component';
 import { DisplayDataComponent } from './components/display-data/display-data.component';
+import { AnchorsComponent } from './anchors/anchors.component';
+import { AssetsComponent } from './assets/assets.component';
+import { MapsComponent } from './maps/maps.component';
+import { ScenariosComponent } from './scenarios/scenarios.component';
+import { UsersComponent } from './users/users.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
     EditorComponent,
-    DisplayDataComponent
+    DisplayDataComponent,
+    AnchorsComponent,
+    AssetsComponent,
+    MapsComponent,
+    ScenariosComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,
