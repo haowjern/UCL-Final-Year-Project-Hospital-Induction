@@ -1,18 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-export interface RouteInfo {
-  path: string;
-  title: string;
-}
-
-export const ROUTES: RouteInfo[] = [
-  { path: '/dashboard', title: 'Dashboard'},
-  { path: '/anchors', title: 'Anchors'},
-  { path: '/assets', title: 'Assets'},
-  { path: '/maps', title: 'Maps'},
-  { path: '/scenarios', title: 'Scenarios'},
-  { path: '/users', title: 'Users'}
-];
+import { ROUTES } from './routes';
 
 @Component({
   selector: 'app-root',

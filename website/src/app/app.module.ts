@@ -16,6 +16,9 @@ import { AssetsComponent } from './assets/assets.component';
 import { MapsComponent } from './maps/maps.component';
 import { ScenariosComponent } from './scenarios/scenarios.component';
 import { UsersComponent } from './users/users.component';
+import {MatTableModule} from '@angular/material/table';
+import {MatCardModule} from '@angular/material/card';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -35,7 +38,10 @@ import { UsersComponent } from './users/users.component';
     BrowserAnimationsModule,
     MatToolbarModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatTableModule,
+    MatCardModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

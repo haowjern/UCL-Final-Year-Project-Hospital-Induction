@@ -2,3 +2,31 @@
 /* Application-wide Styles */
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
+.top-left-card {
+    float: left;
+    width: 59%;
+    height: 30%;
+}
+
+.top-right-card {
+    float: right;
+    width: 40%;
+    height: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.dark-button {
+    height: 50px; 
+    width: 150px;
+    font-size: 110%;
+
+}
+
+.button-row {
+    display: flex;
+    position: relative;
+}
