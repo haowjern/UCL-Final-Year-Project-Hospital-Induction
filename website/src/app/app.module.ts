@@ -17,8 +17,8 @@ import { MapsComponent } from './maps/maps.component';
 import { ScenariosComponent } from './scenarios/scenarios.component';
 import { UsersComponent } from './users/users.component';
 import {MatTableModule} from '@angular/material/table';
-import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -40,8 +40,8 @@ import {MatButtonModule} from '@angular/material/button';
     MatSidenavModule,
     MatListModule,
     MatTableModule,
-    MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDividerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

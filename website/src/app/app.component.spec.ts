@@ -1,12 +1,27 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatListModule} from '@angular/material/list';
+import {MatDividerModule} from '@angular/material/divider';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
+
 
 describe('AppComponent', () => {
+  let fixture;
+  let app; 
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatListModule,
+        MatDividerModule,
+        BrowserAnimationsModule
       ],
       declarations: [
         AppComponent
@@ -14,22 +29,18 @@ describe('AppComponent', () => {
     }).compileComponents();
   }));
 
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+    app = fixture.debugElement.componentInstance;
+  });
+
+
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'website'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('website');
-  });
-
-  it('should render title in a h1 tag', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to website!');
+  it(`should have contain title 'Editor'`, () => {
+    expect(app.title).toContain('Editor');
   });
 });
