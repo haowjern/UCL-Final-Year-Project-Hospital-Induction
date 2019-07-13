@@ -12,6 +12,10 @@ var config = {
             database: 'app_mysql',
             port: 3306,
             ssl:{ca: fs.readFileSync('C:/Users/haowjern/Certificates/BaltimoreCyberTrustRoot.crt.pem')}
+        },
+
+        storage: {
+            AZURE_STORAGE_CONNECTION_STRING: 'N6Kw8xToZ8JEhTrfil59Vtc/bVt7Fnu5Lh4Ha3d+kxJGwT9elb5euINQ8paQ6j9xokRVPEaO9Fek46PKzliR0g=='
         }
     }
 }
