@@ -8,7 +8,7 @@
     </mat-toolbar>
 
     <mat-nav-list>
-      <a mat-list-item *ngFor="let item of sidebarItems" [routerLink] = "item.path">
+      <a mat-list-item *ngFor="let item of sidebarItems" id="{{ item.title }}" [routerLink] = "item.path">
         {{ item.title }}
       </a>
       <mat-divider></mat-divider>

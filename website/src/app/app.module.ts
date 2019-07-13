@@ -19,6 +19,8 @@ import { UsersComponent } from './users/users.component';
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import 'hammerjs';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,8 @@ import {MatDividerModule} from '@angular/material/divider';
     MatListModule,
     MatTableModule,
     MatButtonModule,
-    MatDividerModule
+    MatDividerModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
