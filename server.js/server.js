@@ -10,8 +10,12 @@ const connection = mysql.createConnection({
     host: config.database.host,
     user: config.database.user,
     password: config.database.password,
-    database: config.database.database
+    database: config.database.database,
+    port: config.database.port,
+    ssl: config.database.ssl
 })
+
+
 
 function connect_to_database(connection) {
     // Connect to database
@@ -36,7 +40,7 @@ app.route('/api/maps').get((request, response) => {
 
     let sql = `SELECT * FROM assets AS a1, asset_types AS a2 
                 WHERE a1.asset_typeID = a2.asset_typeID 
-                AND a2.asset_type_name = map;`
+                AND a2.asset_type_name = "map";`
 
     connection.query(sql, (error, results, fields) => {
         if (error) {
