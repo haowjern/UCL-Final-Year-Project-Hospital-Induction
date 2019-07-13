@@ -15,8 +15,6 @@ const connection = mysql.createConnection({
     ssl: config.database.ssl
 })
 
-
-
 function connect_to_database(connection) {
     // Connect to database
     connection.connect((err) => {
@@ -44,6 +42,7 @@ app.route('/api/maps').get((request, response) => {
 
     connection.query(sql, (error, results, fields) => {
         if (error) {
+            console.log(error);
             response.status(400).send('Error in database operation');
         } else {
             response.send(results); 
