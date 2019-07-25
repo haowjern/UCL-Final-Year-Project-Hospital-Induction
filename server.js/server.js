@@ -1,146 +1,111 @@
+// require statements
+
 const express = require('express');
 const bodyParser = require('body-parser');
-
-const mysql = require('mysql');
+const multer = require('multer');
+const inMemoryStorage = multer.memoryStorage();
+const uploadStrategy = multer({ storage: inMemoryStorage }).single('file_path');
+const getStream = require('into-stream');
 
 const config = require('./config')['development'];
 
-// Create connection 
-const connection = mysql.createConnection({
-    host: config.database.host,
-    user: config.database.user,
-    password: config.database.password,
-    database: config.database.database,
-    port: config.database.port,
-    ssl: config.database.ssl
-})
+const blob_access = require('./blob_access'); 
 
-function connect_to_database(connection) {
-    // Connect to database
-    connection.connect((err) => {
-        if(err){
-            console.error('error connecting: ' + err.stack);
-            return;
-        }
-        console.log('connected as id ' + connection.threadID);
-    })  
-}
+const Database = require('./database.js');
+const database = new Database(config.database); 
 
-const app = express()
+
+// app 
+
+const app = express();
+
+app.use(bodyParser.json()); // support JSON encoded bodies
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.listen(8000, () => {
     console.log('Server started on port 8000')
 })
 
-// GET ALL MAPS
-app.route('/api/maps').get((request, response) => {
-    connect_to_database(connection);
+// GET ALL MAPS AS A TABLE
+app.get('/api/map-management/maps', (req, res) => {
+    // connect_to_database(connection);
 
     let sql = `SELECT * FROM assets AS a1, asset_types AS a2 
                 WHERE a1.asset_typeID = a2.asset_typeID 
                 AND a2.asset_type_name = "map";`
 
-    connection.query(sql, (error, results, fields) => {
-        if (error) {
-            console.log(error);
-            response.status(400).send('Error in database operation');
-        } else {
-            response.send(results); 
-        }
+    database.query(sql).then( rows => {
+        res.send(rows);
+    }, err => {
+        console.log(err);
+        res.status(400).send('Error in database operation - Get all maps');
+        database.close_connection(); 
+    }).then( () => {
+        database.close_connection(); 
     }); 
-    
-    connection.end();
 });
 
+const getBlobName = originalName => {
+    // Use a random number to generate a unique file name, 
+    // removing "0." from the start of the string.
+    const identifier = Math.random().toString().replace(/0\./, ''); 
+    return `${identifier}-${originalName}`;
+  };
 
-// GET SELECTED MAP 
-app.route('/api/maps/:name').get((request, response) => {
-    const requestedMapName = request.params['name']
-    connect_to_database(connection);
 
-    let sql = `SELECT * FROM assets AS a1, asset_types AS a2 
-                WHERE a1.asset_typeID = a2.asset_typeID 
-                AND a1.asset_name = ? FOR JSON`;
+// ADD A MAP 
+app.post('/api/map-management/maps', uploadStrategy, async (req, res) => {
 
-    connection.query(sql, [requestedMapName], (error, results, fields) => {
-        if (error) {
-            response.status(400).send('Error in database operation');
-        } else {
-            response.send(results); 
-        }
-    }); 
-    
-    connection.end();
+    /* Obtain form values */ 
+    let map_name = req.body.file_name; 
+    let stream = getStream(req.file.buffer);
+    let blob_name = getBlobName(req.file.originalname);
+
+    /* Upload map to blob storage */
+    let container_name = "assets"; 
+
+    try {
+        /* upload a file to blob storage */ 
+        await blob_access.uploadStream(container_name, stream, blob_name);
+        console.log("Added map to blob storage successfully.")
+
+    } catch {
+        console.log('Error - Uploading asset to Blob Storage: ');
+        console.log('---request body: ' + JSON.stringify(req.body));
+        console.log('---container_name: ' + container_name);
+        console.log('---map_name: ' + map_name);
+        res.status(400).send('Error in uploading asset to Blob Storage: ');
+    } 
+
+    /* Upload map to database */ 
+
+    let sql_getID = `SELECT asset_typeID FROM asset_types WHERE asset_type_name = "map";`
+    let selected_asset_typeID; 
+
+    let sql_addMap = `INSERT INTO assets (asset_typeID, asset_name, blob_name) VALUES (?, ?, ?);`
+
+    database.query(sql_getID).then( rows => {
+        selected_asset_typeID = rows[0].asset_typeID;
+        console.log('Success - Retrieved asset_typeID for adding map to database: ' + selected_asset_typeID);
+        return database.query(sql_addMap, [selected_asset_typeID, map_name, blob_name]); 
+    }, err => {
+        console.log(error); 
+        res.status(400).send('Error in database operation - Add map.');
+        console.log('Error in database operation - Retrieving asset_typeID for adding map to database.');
+        database.close_connection();
+    }).then( rows => {
+        res.status(200).send(req.body);
+        console.log("Added map to database successfully.");
+    }, err => {
+        console.log(error);
+        /* Delete blob */
+        res.status(400).send('Error in database operation - Add map.');
+        database.close_connection();
+    }).then( () => {
+        database.close_connection(); 
+    })
 });
 
-// GET ALL LOCATIONS OF ONE MAP 
-app.route('/api/maps/:name/getlocations').get((request, response) => {
-    const requestedMapName = request.params['name']
-    connect_to_database(connection);
+// tests 
 
-    let sql = `SELECT * FROM locations
-                WHERE current_mapID = (
-                    SELECT assetID FROM assets 
-                    WHERE map_name = ? 
-                ) FOR JSON`; 
-    
-    connection.query(sql, [requestedMapName], (error, results, fields) => {
-        if (error) {
-            response.status(400).send('Error in database operation');
-        } else {
-            response.send(results);
-        }
-    });
-
-    connection.end(); 
-});
-
-
-// GET SINGLE LOCATION OF A MAP
-// returns 
-app.route('/api/maps/:map_name/:location_name/').get((request, response) => {
-    const requestedMapName = request.params['map_name'];
-    const requestedLocationName = request.params['location_name'];
-
-    let sql = `SELECT * FROM locations
-                WHERE current_mapID = (
-                    SELECT assetID FROM assets 
-                    WHERE map_name = ? 
-                )
-                AND location_name = ?
-                FOR JSON` 
-
-    let filtered_result;
-    connection.query(sql, [requestedMapName, requestedLocationName], (error, results, fields) => {
-        if (error) {
-            response.status(400).send('Error in database operation');
-        } else {
-            filtered_result = results;
-            // get type and write it down for json 
-            // get location floor map / location connection map details - e.g. how many floors, what map is it connected to
-        }
-    });
-
-    filtered_result.current_mapID = JSON.stringify()
-
-    connection.end(); 
-});
-
-
-// GET
-app.route('/api/maps/:name').get((req, res) => {
-    const requestedCatName = req.params['name']
-
-    // get data from database 
-    data = { name: requestedCatName }; 
-
-    // send response
-    res.send(data);
-
-})
-
-// POST
-app.use(bodyParser.json())
-app.route('/api/cats').post((req, res) => {
-    res.send(201, req.body)
-  })
+// 1. connection is closed when error occurs 
