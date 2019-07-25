@@ -43,10 +43,21 @@ module.exports = {
         try { 
             await uploadStreamToBlockBlob(aborter, stream, blockBlobURL, uploadOptions.bufferSize, uploadOptions.maxBuffers);
             console.log('Success - File uploaded to Azure Blob Storage.');   
-      
         } catch (err) {
             console.log('Error - File not uploaded to Azure Blob Storage');
             console.log(err);
+        }
+    },
+
+    deleteBlob: async function (containerName, blobName) {
+        const containerURL = ContainerURL.fromServiceURL(serviceURL, containerName);
+        const blobURL = BlobURL.fromContainerURL(containerURL, blobName);
+        const blockBlobURL = BlockBlobURL.fromBlobURL(blobURL);
+
+        try {
+            blockBlobURL.delete(aborter); 
+        } catch (err) {
+            console.log('Error - Blob cannot be deleted');
         }
     }
 }

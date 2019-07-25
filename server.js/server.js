@@ -84,7 +84,13 @@ app.post('/api/map-management/maps', uploadStrategy, async (req, res) => {
 
     let sql_addMap = `INSERT INTO assets (asset_typeID, asset_name, blob_name) VALUES (?, ?, ?);`
 
+    // await connection.query() try?
+
+    // 
+
     database.query(sql_getID).then( rows => {
+        /* First retrieve asset_typeID to be used to for adding to database later */
+        /* Once retrieved, add map to database with the asset_typeID */
         selected_asset_typeID = rows[0].asset_typeID;
         console.log('Success - Retrieved asset_typeID for adding map to database: ' + selected_asset_typeID);
         return database.query(sql_addMap, [selected_asset_typeID, map_name, blob_name]); 
@@ -97,10 +103,11 @@ app.post('/api/map-management/maps', uploadStrategy, async (req, res) => {
         res.status(200).send(req.body);
         console.log("Added map to database successfully.");
     }, err => {
+        /* If error occured in adding to database, delete blob that has been uploaded to keep things consistent */
         console.log(error);
-        /* Delete blob */
         res.status(400).send('Error in database operation - Add map.');
         database.close_connection();
+        blob_access.deleteBlob(container_name, blob_name);
     }).then( () => {
         database.close_connection(); 
     })
