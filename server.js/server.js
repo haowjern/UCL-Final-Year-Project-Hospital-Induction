@@ -33,15 +33,17 @@ app.get('/api/map-management/maps', (req, res) => {
     let sql = `SELECT * FROM assets AS a1, asset_types AS a2 
                 WHERE a1.asset_typeID = a2.asset_typeID 
                 AND a2.asset_type_name = "map";`
-
+        
     database.query(sql).then( rows => {
         res.send(rows);
     }, err => {
-        console.log(err);
+        console.log("Error in getting maps, error: " + err); 
+        throw new Error();
+    // }).then( () => {
+    //     database.close_connection(); 
+    }).catch( err => {
+        console.log("Something went wrong ... ");
         res.status(400).send('Error in database operation - Get all maps');
-        database.close_connection(); 
-    }).then( () => {
-        database.close_connection(); 
     }); 
 });
 
@@ -50,7 +52,7 @@ const getBlobName = originalName => {
     // removing "0." from the start of the string.
     const identifier = Math.random().toString().replace(/0\./, ''); 
     return `${identifier}-${originalName}`;
-  };
+};
 
 
 // ADD A MAP 
@@ -84,6 +86,8 @@ app.post('/api/map-management/maps', uploadStrategy, async (req, res) => {
 
     let sql_addMap = `INSERT INTO assets (asset_typeID, asset_name, blob_name) VALUES (?, ?, ?);`
 
+    // database.open_connection(); 
+
     // await connection.query() try?
 
     // 
@@ -94,22 +98,21 @@ app.post('/api/map-management/maps', uploadStrategy, async (req, res) => {
         selected_asset_typeID = rows[0].asset_typeID;
         console.log('Success - Retrieved asset_typeID for adding map to database: ' + selected_asset_typeID);
         return database.query(sql_addMap, [selected_asset_typeID, map_name, blob_name]); 
-    }, err => {
-        console.log(error); 
-        res.status(400).send('Error in database operation - Add map.');
+    }, err => { 
         console.log('Error in database operation - Retrieving asset_typeID for adding map to database.');
-        database.close_connection();
+        throw new Error(); 
     }).then( rows => {
         res.status(200).send(req.body);
         console.log("Added map to database successfully.");
     }, err => {
         /* If error occured in adding to database, delete blob that has been uploaded to keep things consistent */
-        console.log(error);
-        res.status(400).send('Error in database operation - Add map.');
-        database.close_connection();
         blob_access.deleteBlob(container_name, blob_name);
-    }).then( () => {
-        database.close_connection(); 
+        throw new Error();
+    // }).then( () => {
+    //     database.close_connection(); 
+    }).catch( err => {
+        res.status(400).send('Error in database operation - Add map.');
+        // database.close_connection(); 
     })
 });
 

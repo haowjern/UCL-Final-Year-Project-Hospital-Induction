@@ -11,7 +11,8 @@ var config = {
             password: 'lG7cV95J',
             database: 'app_mysql',
             port: 3306,
-            ssl:{ca: fs.readFileSync('C:/Users/haowjern/Certificates/BaltimoreCyberTrustRoot.crt.pem')}
+            ssl:{ca: fs.readFileSync('C:/Users/haowjern/Certificates/BaltimoreCyberTrustRoot.crt.pem')},
+            connectionLimit : 10
         },
 
         storage: {
