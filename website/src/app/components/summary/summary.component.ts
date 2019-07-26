@@ -42,9 +42,9 @@ export class SummaryComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.addMapLink = '/' + this.title + '/add';
-    this.editMapLink = '/' + this.title + '/edit';
-    this.deleteMapLink = '/' + this.title + '/delete';
+    this.addLink = '/' + this.title + '/add';
+    this.editLink = '/' + this.title + '/edit';
+    this.deleteLink = '/' + this.title + '/delete';
 
     this.displayedColumns = ['position', 'name', 'weight', 'symbol'];
 
