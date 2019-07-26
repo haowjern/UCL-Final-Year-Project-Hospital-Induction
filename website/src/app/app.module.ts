@@ -21,6 +21,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import 'hammerjs';
+import { MapsAddFormComponent } from './maps-add-form/maps-add-form.component';
+import { SummaryComponent } from './components/summary/summary.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import 'hammerjs';
     AssetsComponent,
     MapsComponent,
     ScenariosComponent,
-    UsersComponent
+    UsersComponent,
+    MapsAddFormComponent,
+    SummaryComponent
   ],
   imports: [
     BrowserModule,

@@ -6,6 +6,7 @@ import { AssetsComponent } from './assets/assets.component';
 import { MapsComponent } from './maps/maps.component';
 import { ScenariosComponent } from './scenarios/scenarios.component';
 import { UsersComponent } from './users/users.component';
+import { MapsAddFormComponent } from './maps-add-form/maps-add-form.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -14,7 +15,8 @@ const routes: Routes = [
   { path: 'assets', component: AssetsComponent },
   { path: 'maps', component: MapsComponent },
   { path: 'scenarios', component: ScenariosComponent },
-  { path: 'users', component: UsersComponent }
+  { path: 'users', component: UsersComponent },
+  { path: 'maps/add', component: MapsAddFormComponent }
 ];
 
 @NgModule({

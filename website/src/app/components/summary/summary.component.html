@@ -2,7 +2,7 @@
 <div class="flex-container">
     <div> 
         <div class = "flex-header">
-            <h1> Anchors </h1>   
+            <h1> {{ title | titlecase }} </h1>   
             <mat-divider></mat-divider>
         </div>
         
@@ -12,14 +12,14 @@
                 <p> Total: 5 </p>
             </div>
             <div class="top-right-card">
-                <button mat-raised-button class="dark-button" [routerLink]="['']">
-                    Add Maps
+                <button mat-raised-button class="dark-button" [routerLink]="[addMapLink]">
+                    Add {{ title | titlecase | slice:0:-1 }}
                 </button>
-                <button mat-raised-button class="dark-button">
-                    Edit Maps
+                <button mat-raised-button class="dark-button" [routerLink]="[editMapLink]">
+                    Edit {{ title | titlecase | slice:0:-1 }}
                 </button>
-                <button mat-raised-button class="dark-button">
-                    Delete Maps
+                <button mat-raised-button class="dark-button" [routerLink]="[deleteMapLink]">
+                    Delete {{ title | titlecase | slice:0:-1 }}
                 </button>
             </div>
         </div>

@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
-
+import { Component, OnInit, ViewChild, Input  } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 export interface PeriodicElement {
   name: string;
@@ -23,23 +22,32 @@ const ELEMENT_DATA: PeriodicElement[] = [
   {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
 ];
 
-
 @Component({
-  selector: 'app-maps',
-  templateUrl: './maps.component.html',
-  styleUrls: ['./maps.component.css']
+  selector: 'app-summary',
+  templateUrl: './summary.component.html',
+  styleUrls: ['./summary.component.css']
 })
-export class MapsComponent implements OnInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+export class SummaryComponent implements OnInit {
+  displayedColumns: string[];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
 
-  title = 'maps';
+  addMapLink: string;
+  editMapLink: string;
+  deleteMapLink: string;
+
+  @Input() title: string;
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor() { }
 
   ngOnInit() {
+    this.addMapLink = '/' + this.title + '/add';
+    this.editMapLink = '/' + this.title + '/edit';
+    this.deleteMapLink = '/' + this.title + '/delete';
+
+    this.displayedColumns = ['position', 'name', 'weight', 'symbol'];
+
     this.dataSource.paginator = this.paginator;
   }
 

@@ -1,0 +1,42 @@
+.container {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+table {
+    width: 100%;
+}
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.flex-header {
+    width: 100%;
+}
+
+.flex-row {
+    display: flex; 
+    flex-direction: row;
+}
+
+.top-left-card {
+    width: 50%;
+    height: 200px;
+}
+
+.top-right-card {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    justify-content: center;
+    align-items: flex-end;
+    margin-right: 30px;
+}
+
+
+
