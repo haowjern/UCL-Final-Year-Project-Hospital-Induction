@@ -30,17 +30,13 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./maps.component.css']
 })
 export class MapsComponent implements OnInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-
   title = 'maps';
-
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  mapItems: JSON[];
 
   constructor() { }
 
   ngOnInit() {
-    this.dataSource.paginator = this.paginator;
+    this.mapItems = JSON.parse(JSON.stringify(ELEMENT_DATA));
   }
 
 }

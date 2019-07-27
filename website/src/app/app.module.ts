@@ -24,6 +24,8 @@ import 'hammerjs';
 import { MapsAddFormComponent } from './maps-add-form/maps-add-form.component';
 import { SummaryComponent } from './components/summary/summary.component';
 
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,6 +42,7 @@ import { SummaryComponent } from './components/summary/summary.component';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule, 
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
