@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, Input  } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource, MatTable } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-summary',
@@ -8,14 +8,13 @@ import { MatTableDataSource, MatTable } from '@angular/material/table';
   styleUrls: ['./summary.component.css']
 })
 export class SummaryComponent implements OnInit {
-  displayedColumns: string[];
   addLink: string;
   editLink: string;
   deleteLink: string;
 
   @Input() title: string;
-  @Input() items: JSON[];
-  @Input() dataSource: MatTableDataSource<any>;
+  @Input() displayedColumns: string[];
+  @Input() dataSource: MatTableDataSource<any>; 
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
@@ -25,21 +24,5 @@ export class SummaryComponent implements OnInit {
     this.addLink = '/' + this.title + '/add';
     this.editLink = '/' + this.title + '/edit';
     this.deleteLink = '/' + this.title + '/delete';
-
-    this.displayedColumns = this.getKeys(this.items);
-    this.dataSource = new MatTableDataSource<any>(this.items);
-    this.dataSource.paginator = this.paginator;
   }
-
-  getKeys(items: JSON[]) {
-    const keys: string[] = [];
-
-    // tslint:disable-next-line: forin
-    for (const key in items[0]) {
-      keys.push(key);
-    }
-
-    return keys;
-  }
-
 }
