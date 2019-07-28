@@ -26,6 +26,12 @@ import { SummaryComponent } from './components/summary/summary.component';
 
 import { HttpClientModule } from '@angular/common/http';
 
+import { MatFormFieldModule, MatFormField } from '@angular/material/form-field'; 
+import { MatInputModule } from '@angular/material/input';
+import { MaterialFileInputModule } from 'ngx-material-file-input';
+
+import { MatIconModule } from '@angular/material/icon';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,7 +57,11 @@ import { HttpClientModule } from '@angular/common/http';
     MatTableModule,
     MatButtonModule,
     MatDividerModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MaterialFileInputModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -6,10 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./maps-add-form.component.css']
 })
 export class MapsAddFormComponent implements OnInit {
+  srcResult; 
 
   constructor() { }
 
   ngOnInit() {
   }
+
 
 }
