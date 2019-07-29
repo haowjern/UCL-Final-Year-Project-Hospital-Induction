@@ -20,6 +20,38 @@ export class ConfigService {
     );
   }
 
+  getMapWithID(id: string) {
+    const mapsIdUrl = this.mapsUrl + '/' + id;
+    return this.http.get(mapsIdUrl).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getLocationsOfMapWithType(mapId: string, type: string) {
+    const locationTypeUrl = this.mapsUrl + '/' + mapId + '/locations' + '?type=' + type;
+    return this.http.get(locationTypeUrl).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getLocationWithID(mapId: string, id: string) {
+    const locationIdUrl = this.mapsUrl + '/' + mapId + '/locations' + '/' + id;
+    return this.http.get(locationIdUrl).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getFloors(mapId: string, buildingId: string) {
+    const floorsUrl = this.mapsUrl + '/' + mapId + '/locations' + '/' + buildingId + '/floors';
+    return this.http.get(floorsUrl).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  addMap() {
+
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.

@@ -6,7 +6,12 @@
     height: 50px; 
     width: 150px;
     font-size: 110%;
+}
 
+.light-button {
+    height: 50px; 
+    width: 150px;
+    font-size: 110%;
 }
 
 .button-row {

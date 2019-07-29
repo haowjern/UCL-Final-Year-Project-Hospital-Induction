@@ -28,9 +28,14 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { MatFormFieldModule, MatFormField } from '@angular/material/form-field'; 
 import { MatInputModule } from '@angular/material/input';
-import { MaterialFileInputModule } from 'ngx-material-file-input';
+import { MatSelectModule } from '@angular/material/select';
+
 
 import { MatIconModule } from '@angular/material/icon';
+
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -60,8 +65,10 @@ import { MatIconModule } from '@angular/material/icon';
     MatPaginatorModule,
     MatFormFieldModule,
     MatInputModule,
-    MaterialFileInputModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
