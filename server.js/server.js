@@ -6,6 +6,7 @@ const multer = require('multer');
 const inMemoryStorage = multer.memoryStorage();
 const uploadStrategy = multer({ storage: inMemoryStorage }).single('file_path');
 const getStream = require('into-stream');
+const cors = require('express'); 
 
 const config = require('./config')['development'];
 
@@ -19,6 +20,16 @@ const database = new Database(config.database);
 
 const app = express();
 
+app.use(cors({
+    origin: 'http://localhost:4200'
+}));
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://localhost:4200"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
 app.use(bodyParser.json()); // support JSON encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -29,6 +40,7 @@ app.listen(8000, () => {
 // GET ALL MAPS AS A TABLE
 app.get('/api/map-management/maps', (req, res) => {
     // connect_to_database(connection);
+    console.log('Getting maps...');
 
     let sql = `SELECT * FROM assets AS a1, asset_types AS a2 
                 WHERE a1.asset_typeID = a2.asset_typeID 
@@ -53,6 +65,110 @@ const getBlobName = originalName => {
     const identifier = Math.random().toString().replace(/0\./, ''); 
     return `${identifier}-${originalName}`;
 };
+
+// GET A MAP WITH AN ID
+app.get('/api/map-management/maps/:mapId', (req, res) => {
+    let mapId = req.params.mapId;
+
+    let sql = `SELECT * FROM assets AS a1, asset_types AS a2 
+                WHERE a1.asset_typeID = a2.asset_typeID 
+                AND a2.asset_type_name = "map"
+                AND a1.assetID = ?;`
+        
+    database.query(sql, [mapId]).then(rows => {
+        res.send(rows);
+    }, err => {
+        console.log("Error in getting a map with ID, error: " + err); 
+        throw new Error();
+    // }).then( () => {
+    //     database.close_connection(); 
+    }).catch( err => {
+        console.log("Something went wrong ... ");
+        res.status(400).send('Error in database operation - Get map with ID');
+    }); 
+});
+
+// GET ALL LOCATIONS WITH OPTIONAL TYPE OF A MAP 
+app.get('/api/map-management/maps/:mapId/locations', (req, res) => {
+    let mapId = req.params.mapId;
+    // test out if req.query is empty what happens, basically use a query string to indicate type 
+
+    // if no query parameters 
+    if (Object.keys(req.query).length === 0) {
+        let sql = `SELECT * FROM locations AS l1
+                    AND l1.location_currentmapID = ?;`
+
+        database.query(sql, [mapId]).then(rows => {
+            res.send(rows);
+        }, err => {
+            console.log("Error in getting all locations of a map, error: " + err); 
+            throw new Error();
+        }).catch( err => {
+            console.log("Something went wrong ... ");
+            res.status(400).send('Error in database operation - Get all locations of a map');
+        }); 
+
+    } else {
+        let type = req.query.type
+
+        let sql = `SELECT * FROM locations AS l1, location_types AS l2 
+                    WHERE l1.location_typeID = l2.location_typeID 
+                    AND l2.location_type_name = ?
+                    AND l1.current_mapID = ?;`
+
+        database.query(sql, [type, mapId]).then(rows => {
+            res.send(rows);
+        }, err => {
+            console.log("Error in getting location types of a map, error: " + err); 
+            throw new Error();
+        // }).then( () => {
+        //     database.close_connection(); 
+        }).catch( err => {
+            console.log("Something went wrong ... ");
+            res.status(400).send('Error in database operation - Get location types of a map');
+        }); 
+    }
+});
+
+// GET A LOCATION WITH AN ID
+app.get('/api/map-management/maps/:mapId/locations/:locationId', (req, res) => {
+    let mapId = req.params.mapId;
+    let locationId = req.params.locationId;
+
+    let sql = `SELECT * FROM locations AS l1
+                WHERE l1.locationID = ?;`
+        
+    database.query(sql, [locationId]).then(rows => {
+        res.send(rows);
+    }, err => {
+        console.log("Error in getting a location with ID, error: " + err); 
+        throw new Error();
+    // }).then( () => {
+    //     database.close_connection(); 
+    }).catch( err => {
+        console.log("Something went wrong ... ");
+        res.status(400).send('Error in database operation - Get location with ID');
+    }); 
+});
+
+// GET ALL FLOORS OF A BUILDING 
+app.get('/api/map-management/maps/:mapId/locations/:buildingId/floors', (req, res) => {
+    let mapId = req.params.mapId;
+    let buildingId = req.params.buildingId;
+
+    let sql = `SELECT * FROM location_floor_maps AS l1
+                AND l1.selected_locationID = ?;`
+        
+    database.query(sql, [buildingId]).then(rows => {
+        res.send(rows);
+    }, err => {
+        console.log("Error in getting floors of a building, error: " + err); 
+        throw new Error();
+    }).catch( err => {
+        console.log("Something went wrong ... ");
+        res.status(400).send('Error in database operation - Get all maps');
+    }); 
+});
 
 
 // ADD A MAP 

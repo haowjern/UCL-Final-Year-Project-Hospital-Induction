@@ -18,6 +18,10 @@ var config = {
         storage: {
             accountName: 'apptreasurehunt',
             accountKey: 'N6Kw8xToZ8JEhTrfil59Vtc/bVt7Fnu5Lh4Ha3d+kxJGwT9elb5euINQ8paQ6j9xokRVPEaO9Fek46PKzliR0g=='
+        },
+
+        website: {
+            url: 'http://localhost:4200'
         }
     }
 }
