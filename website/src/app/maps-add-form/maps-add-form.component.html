@@ -1,17 +1,16 @@
 
 
 <h1> Add Map </h1>
-<div *ngIf="isFillingForm; else addLocations">
+<div>
     <form id="addMapForm" [formGroup]="addMapForm" (ngSubmit)="onSubmitAddMap()">
         <mat-form-field>
             <input matInput placeholder="Map Name" formControlName="uploadedMapName">
-    
         </mat-form-field>
     
         <div class="select-file">
             <mat-label>
                 Upload Map: 
-                <input type="file" placeholder="Upload file" formControlName="uploadedMapFile">
+                <input type="file" (change)="onFileSelected($event)" placeholder="Upload file" formControlName="uploadedMapFile">
             </mat-label>
         </div>
     
@@ -23,6 +22,7 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
+        
         <div *ngIf="selectedIsMap">
             <mat-form-field>
                 <mat-label>Select Building</mat-label>
@@ -36,8 +36,8 @@
                 <mat-form-field>
                     <mat-label>Select Floor</mat-label>
                     <mat-select formControlName="selectedFloor">
-                        <mat-option *ngFor="let floor of floors" [value]="floor.locationID">
-                            {{floor.floor_name}}
+                        <mat-option *ngFor="let floor of floors" [value]="floor.location_floor_mapID">
+                            {{floor.floor_number}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -45,12 +45,24 @@
         </div>
     
         <div class = "form-buttons">
-            <button mat-raised-button class ="dark-button" [routerLink]="['/maps']">Cancel</button>
-            <button mat-raised-button class="light-button" (click)="onNext()" [disabled]="!addMapForm.valid">Next</button>
+            <button mat-raised-button class="dark-button" [routerLink]="['/maps']">Cancel</button>
+            <button mat-raised-button class="light-button" [disabled]="!addMapForm.valid">Next</button>
         </div>
+
     </form>
 </div>
 
-<ng-template #addLocations>
-    Content to render when condition is false
-</ng-template>
+<div id=addLocations>
+    <p>Create locations of interests on your map and label them ‘building’ for a building with 1 or more floors, and ‘room’ otherwise.</p>
+    
+
+    <canvas id="mapCanvas" width="500" height="200" style="border:2px solid black">
+        
+    </canvas>
+
+    <div class = "form-buttons">
+        <button mat-raised-button class="dark-button" (click)="displayForm()">Back</button>
+        <button mat-raised-button class="light-button" [disabled]="!addMapForm.valid" (click)="onSubmitForm()">Confirm</button>
+    </div>
+</div>
+

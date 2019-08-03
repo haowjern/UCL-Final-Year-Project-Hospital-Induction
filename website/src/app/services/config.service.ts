@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Location } from '../classes/location';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +21,23 @@ export class ConfigService {
     );
   }
 
+  getMapWithName(name: string) {
+    const mapUrl = this.mapsUrl + '?name=' + name;
+    return this.http.get(mapUrl).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getMapWithID(id: string) {
     const mapsIdUrl = this.mapsUrl + '/' + id;
     return this.http.get(mapsIdUrl).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getLocationWithQuery(mapId: string, type: string, name: string) {
+    const locationUrl = this.mapsUrl + '/' + mapId + '/locations' + '?type=' + type + '&name=' + name;
+    return this.http.get(locationUrl).pipe(
       catchError(this.handleError)
     );
   }
@@ -41,15 +56,29 @@ export class ConfigService {
     );
   }
 
-  getFloors(mapId: string, buildingId: string) {
+  getFloorsWithoutMaps(mapId: string, buildingId: string) {
     const floorsUrl = this.mapsUrl + '/' + mapId + '/locations' + '/' + buildingId + '/floors';
     return this.http.get(floorsUrl).pipe(
       catchError(this.handleError)
     );
   }
 
-  addMap() {
+  addMap(formData) {
+    return this.http.post(this.mapsUrl, formData).pipe(
+      catchError(this.handleError)
+    );
+  }
 
+  addLocation(mapId, data) {
+    const locationsUrl = this.mapsUrl + '/' + mapId + '/locations';
+    return this.http.post(locationsUrl, data).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  addFloor(mapId: string, buildingId: string, floor) {
+    const floorUrl = this.mapsUrl + '/' + mapId + '/locations' + '/' + buildingId + '/floors' + '?number=' + floor.floorNumber;
+    return this.http.post(floorUrl, floor);
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -61,7 +90,7 @@ export class ConfigService {
       // The response body may contain clues as to what went wrong,
       console.error(
         `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
+        `body was: ${JSON.stringify(error.error)}`);
     }
     // return an observable with a user-facing error message
     return throwError(

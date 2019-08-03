@@ -35,6 +35,11 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { LocationFormDirective } from './directives/location-form.directive';
+import { LocationFormComponent } from './location-form/location-form.component';
+
+import {MatDialogModule} from '@angular/material/dialog'; 
+import {MatRadioModule} from '@angular/material/radio'; 
 
 
 @NgModule({
@@ -49,7 +54,9 @@ import { FormsModule } from '@angular/forms';
     ScenariosComponent,
     UsersComponent,
     MapsAddFormComponent,
-    SummaryComponent
+    SummaryComponent,
+    LocationFormDirective,
+    LocationFormComponent
   ],
   imports: [
     BrowserModule,
@@ -68,9 +75,12 @@ import { FormsModule } from '@angular/forms';
     MatIconModule,
     MatSelectModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule,
+    MatRadioModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ LocationFormComponent ]
 })
 export class AppModule { }
