@@ -59,5 +59,18 @@ module.exports = {
         } catch (err) {
             console.log('Error - Blob cannot be deleted');
         }
+    },
+
+    readStream: async function (containerName, blobName) {
+        const containerURL = ContainerURL.fromServiceURL(serviceURL, containerName);
+        const blobURL = BlobURL.fromContainerURL(containerURL, blobName);
+        const blockBlobURL = BlockBlobURL.fromBlobURL(blobURL);
+
+        try {
+            const downloadResponse = await blockBlobURL.download(aborter, 0);
+            return downloadResponse.readableStreamBody; 
+        } catch (err) {
+            console.log('Error - Blob cannot be read ' + err);
+        }
     }
 }
