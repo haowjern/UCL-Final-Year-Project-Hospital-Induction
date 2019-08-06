@@ -7,6 +7,7 @@ export class Location {
     type: Room | Building;
     relativePositionOnMap: Position; // fraction number
     mapId: number;
+    locationId: number;
 
     constructor(inputX: number, inputY: number) {
       this.relativePositionOnMap = new Position(inputX, inputY);

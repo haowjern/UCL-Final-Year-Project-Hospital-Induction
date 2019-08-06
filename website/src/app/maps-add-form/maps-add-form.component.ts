@@ -48,8 +48,6 @@ export class MapsAddFormComponent implements OnInit, OnDestroy {
 
   imgURL;
 
-  isFillingForm = true;
-
   locations: Location[];
 
   @ViewChild(LocationFormDirective, {static: true}) appLocationForm: LocationFormDirective;
@@ -106,17 +104,18 @@ export class MapsAddFormComponent implements OnInit, OnDestroy {
       isMapSubscription.unsubscribe();
       const resMap = JSON.parse(JSON.stringify(res))[0]; // response is a list with one element
 
-      if (resMap.asset_type_name === 'map') {
-        return true;
-      } else {
-        return false;
+      if (resMap) {
+        if (resMap.asset_type_name === 'map') {
+          return true;
+        }
       }
+      return false;
     });
   }
 
   async isBuilding(mapId, buildingID) {
     // send buildingID's get request
-    const isBuildingSubscription = await this.configService.getLocationWithID(mapId, buildingID).subscribe((res: Response) => {
+    const isBuildingSubscription = await this.configService.getLocationWithID(buildingID).subscribe((res: Response) => {
       isBuildingSubscription.unsubscribe();
       const location = JSON.parse(JSON.stringify(res))[0]; // response is a list with one element
 
@@ -130,7 +129,6 @@ export class MapsAddFormComponent implements OnInit, OnDestroy {
 
   onSubmitAddMap() {
     console.log(this.addMapForm.value);
-    this.isFillingForm = true;
     document.getElementById('addMapForm').style.display = 'none';
     document.getElementById('addLocations').style.display = 'block';
 
@@ -189,8 +187,6 @@ export class MapsAddFormComponent implements OnInit, OnDestroy {
 
     this.locations = [];
     let location;
-
-    // get all previous locations to put in this.locations of this map
 
     this.drawCanvas(ctx, widthCanvas, heightCanvas, widthMouse, heightMouse);
 
@@ -368,13 +364,13 @@ export class MapsAddFormComponent implements OnInit, OnDestroy {
                 console.log('added floor ' + floor.floorNumber);
               });
             }
+            this.router.navigate(['/maps'])
           }, err => {
             console.log('Cant add locations: ' + err);
           });
         }
       });
     });
-    this.router.navigate(['/maps'])
   }
 
 

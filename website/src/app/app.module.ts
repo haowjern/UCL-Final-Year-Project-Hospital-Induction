@@ -39,7 +39,9 @@ import { LocationFormDirective } from './directives/location-form.directive';
 import { LocationFormComponent } from './location-form/location-form.component';
 
 import {MatDialogModule} from '@angular/material/dialog'; 
-import {MatRadioModule} from '@angular/material/radio'; 
+import {MatRadioModule} from '@angular/material/radio';
+import { MapsDeleteComponent } from './maps-delete/maps-delete.component';
+import { MapsEditFormComponent } from './maps-edit-form/maps-edit-form.component'; 
 
 
 @NgModule({
@@ -56,7 +58,9 @@ import {MatRadioModule} from '@angular/material/radio';
     MapsAddFormComponent,
     SummaryComponent,
     LocationFormDirective,
-    LocationFormComponent
+    LocationFormComponent,
+    MapsDeleteComponent,
+    MapsEditFormComponent
   ],
   imports: [
     BrowserModule,
@@ -81,6 +85,6 @@ import {MatRadioModule} from '@angular/material/radio';
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [ LocationFormComponent ]
+  entryComponents: [ LocationFormComponent, MapsDeleteComponent ]
 })
 export class AppModule { }

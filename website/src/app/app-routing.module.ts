@@ -7,6 +7,7 @@ import { MapsComponent } from './maps/maps.component';
 import { ScenariosComponent } from './scenarios/scenarios.component';
 import { UsersComponent } from './users/users.component';
 import { MapsAddFormComponent } from './maps-add-form/maps-add-form.component';
+import { MapsEditFormComponent } from './maps-edit-form/maps-edit-form.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -16,7 +17,8 @@ const routes: Routes = [
   { path: 'maps', component: MapsComponent },
   { path: 'scenarios', component: ScenariosComponent },
   { path: 'users', component: UsersComponent },
-  { path: 'maps/add', component: MapsAddFormComponent }
+  { path: 'maps/add', component: MapsAddFormComponent },
+  { path: 'maps/edit', component: MapsEditFormComponent }
 ];
 
 @NgModule({

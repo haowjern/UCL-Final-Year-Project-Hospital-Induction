@@ -1,18 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { throwError } from 'rxjs';
+import { throwError, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Location } from '../classes/location';
+import { Map } from '../classes/map';
+import { HttpHeaders } from '@angular/common/http';
+
+export class Hero {
+  id: number;
+  name: string;
+}
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigService {
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+    })
+  };
+  
+
 
   websiteName = 'localhost:8000';
 
   mapsUrl = 'http://' + this.websiteName + '/api/map-management/maps';
-
+  locationsUrl = 'http://' + this.websiteName + '/api/location-management/locations';
+  floorsUrl = 'http://' + this.websiteName + '/api/floor-management/floors';
+  
   constructor(private http: HttpClient) { }
 
   getMaps() {
@@ -35,6 +52,21 @@ export class ConfigService {
     );
   }
 
+  putMap(map) {
+    const updateMapUrl = this.mapsUrl + '/' + map.id;
+
+    return this.http.put(updateMapUrl, map).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getLocations(mapId: string) {
+    const locationUrl = this.mapsUrl + '/' + mapId + '/locations'
+    return this.http.get(locationUrl).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getLocationWithQuery(mapId: string, type: string, name: string) {
     const locationUrl = this.mapsUrl + '/' + mapId + '/locations' + '?type=' + type + '&name=' + name;
     return this.http.get(locationUrl).pipe(
@@ -49,9 +81,16 @@ export class ConfigService {
     );
   }
 
-  getLocationWithID(mapId: string, id: string) {
-    const locationIdUrl = this.mapsUrl + '/' + mapId + '/locations' + '/' + id;
+  getLocationWithID(id: string) {
+    const locationIdUrl = this.locationsUrl + '/' + id;
     return this.http.get(locationIdUrl).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteLocations(mapId: string) {
+    const locationUrl = this.mapsUrl + '/' + mapId + '/locations'
+    return this.http.delete(locationUrl).pipe(
       catchError(this.handleError)
     );
   }
@@ -63,8 +102,23 @@ export class ConfigService {
     );
   }
 
+  getFloorWithMap(mapId: string) {
+    const url = this.floorsUrl + '/?mapId=' + mapId;
+    console.log(url);
+    return this.http.get(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   addMap(formData) {
     return this.http.post(this.mapsUrl, formData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteMap(idToDelete) {
+    const deleteUrl = this.mapsUrl + '/' + idToDelete;
+    return this.http.delete(deleteUrl).pipe(
       catchError(this.handleError)
     );
   }
@@ -89,6 +143,7 @@ export class ConfigService {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
       console.error(
+        `Error is ${error}, ` +
         `Backend returned code ${error.status}, ` +
         `body was: ${JSON.stringify(error.error)}`);
     }

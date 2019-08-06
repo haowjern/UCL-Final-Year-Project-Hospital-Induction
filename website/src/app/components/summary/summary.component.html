@@ -18,7 +18,7 @@
                 <button mat-raised-button class="dark-button" [routerLink]="[editLink]">
                     Edit {{ title | titlecase | slice:0:-1 }}
                 </button>
-                <button mat-raised-button class="dark-button" [routerLink]="[deleteLink]">
+                <button mat-raised-button class="dark-button" (click)="onDelete()">
                     Delete {{ title | titlecase | slice:0:-1 }}
                 </button>
             </div>

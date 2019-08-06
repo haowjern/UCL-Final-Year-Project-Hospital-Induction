@@ -1,0 +1,84 @@
+
+<h1> Edit Map </h1>
+<div>
+    <form id="editMapForm" [formGroup]="editMapForm" (ngSubmit)="onSubmitEditMap()">
+        <mat-form-field>
+            <mat-label>Select Map to Edit</mat-label>
+            <mat-select id="select" formControlName="selectedEditMap"> 
+                <mat-option *ngFor="let map of maps" [value]="map.assetID">
+                    {{map.asset_name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        
+        <div id="editMap">
+            <mat-form-field>
+                <input matInput placeholder="Map Name" formControlName="uploadedMapName">
+            </mat-form-field>
+        
+            <div class="select-file">
+                <mat-label>
+                    Upload New Map: 
+                    <input type="file" (change)="onFileSelected($event)" placeholder="Upload file" formControlName="uploadedMapFile">
+                </mat-label>
+            </div>
+            <div>
+                Uploaded Image: 
+                <img src="{{ imgUrl }}">
+            </div>
+        
+            <mat-form-field>
+                <mat-label>Selected Base Map</mat-label>
+                <mat-select id="select" formControlName="selectedMap">
+                    <mat-option [value]=''>
+                        None
+                    </mat-option> 
+                    <mat-option *ngFor="let map of maps" [value]="map.assetID">
+                        {{map.asset_name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            
+            <div *ngIf="selectedIsMap">
+                <mat-form-field>
+                    <mat-label>Selected Building</mat-label>
+                    <mat-select formControlName="selectedBuilding">
+                        <mat-option *ngFor="let building of buildings" [value]="building.locationID">
+                            {{building.location_name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div *ngIf="selectedIsBuilding">
+                    <mat-form-field>
+                        <mat-label>Selected Floor</mat-label>
+                        <mat-select formControlName="selectedFloor">
+                            <mat-option *ngFor="let floor of floors" [value]="floor.location_floor_mapID">
+                                {{floor.floor_number}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    
+        <div class = "form-buttons">
+            <button mat-raised-button class="dark-button" [routerLink]="['/maps']">Cancel</button>
+            <button mat-raised-button class="light-button" [disabled]="!editMapForm.valid">Next</button>
+        </div>
+
+    </form>
+</div>
+
+<div id=addLocations>
+    <p>Create locations of interests on your map and label them ‘building’ for a building with 1 or more floors, and ‘room’ otherwise.</p>
+    
+
+    <canvas id="mapCanvas" width="500" height="200" style="border:2px solid black">
+        
+    </canvas>
+
+    <div class = "form-buttons">
+        <button mat-raised-button class="dark-button" (click)="displayForm()">Back</button>
+        <button mat-raised-button class="light-button" [disabled]="!editMapForm.valid" (click)="onSubmitForm()">Confirm</button>
+    </div>
+</div>
