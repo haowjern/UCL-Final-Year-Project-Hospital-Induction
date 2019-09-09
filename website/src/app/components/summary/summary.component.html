@@ -9,16 +9,16 @@
         
         <div class="flex-row">
             <div class="top-left-card">
-                <p> Total: 5 </p>
+                <p> </p>
             </div>
             <div class="top-right-card">
-                <button mat-raised-button class="dark-button" [routerLink]="[addLink]">
+                <button mat-raised-button color="accent" class="light-button" disabled="{{addButtonDisabled}}" [routerLink]="[addLink]">
                     Add {{ title | titlecase | slice:0:-1 }}
                 </button>
-                <button mat-raised-button class="dark-button" [routerLink]="[editLink]">
+                <button mat-raised-button color="accent" class="light-button" disabled="{{editButtonDisabled}}" [routerLink]="[editLink]">
                     Edit {{ title | titlecase | slice:0:-1 }}
                 </button>
-                <button mat-raised-button class="dark-button" (click)="onDelete()">
+                <button mat-raised-button color="accent" class="light-button" disabled="{{deleteButtonDisabled}}" (click)="onDelete()">
                     Delete {{ title | titlecase | slice:0:-1 }}
                 </button>
             </div>

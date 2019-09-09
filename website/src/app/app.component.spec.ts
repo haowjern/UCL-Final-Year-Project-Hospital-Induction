@@ -90,7 +90,7 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`app.component should have contain title 'Editor'`, () => {
+  it(`app.component should contain title 'Editor'`, () => {
     expect(app.title).toContain('Editor');
   });
 

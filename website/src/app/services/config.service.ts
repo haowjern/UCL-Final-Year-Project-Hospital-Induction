@@ -5,12 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { Location } from '../classes/location';
 import { Map } from '../classes/map';
 import { HttpHeaders } from '@angular/common/http';
-
-export class Hero {
-  id: number;
-  name: string;
-}
-
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -21,16 +16,31 @@ export class ConfigService {
       'Content-Type':  'application/json',
     })
   };
-  
 
+  websiteName: string;
+  mapsUrl: string;
+  locationsUrl: string;
+  floorsUrl: string;
+  assetsUrl: string;
+  anchorsUrl: string;
 
-  websiteName = 'localhost:8000';
-
-  mapsUrl = 'http://' + this.websiteName + '/api/map-management/maps';
-  locationsUrl = 'http://' + this.websiteName + '/api/location-management/locations';
-  floorsUrl = 'http://' + this.websiteName + '/api/floor-management/floors';
-  
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    if (environment.production) {
+      this.websiteName = 'https://app-treasure-hunt-server.azurewebsites.net';
+      this.mapsUrl = this.websiteName + '/api/map-management/maps';
+      this.locationsUrl = this.websiteName + '/api/location-management/locations';
+      this.floorsUrl = this.websiteName + '/api/floor-management/floors';
+      this.assetsUrl = this.websiteName + '/api/asset-management/assets';
+      this.anchorsUrl = this.websiteName + '/api/anchors';
+    } else {
+      this.websiteName = 'localhost:8000';
+      this.mapsUrl = 'http://' + this.websiteName + '/api/map-management/maps';
+      this.locationsUrl = 'http://' + this.websiteName + '/api/location-management/locations';
+      this.floorsUrl = 'http://' + this.websiteName + '/api/floor-management/floors';
+      this.assetsUrl = 'http://' + this.websiteName + '/api/asset-management/assets';
+      this.anchorsUrl = 'http://' + this.websiteName + '/api/anchors';
+    }
+  }
 
   getMaps() {
     return this.http.get(this.mapsUrl).pipe(
@@ -61,7 +71,7 @@ export class ConfigService {
   }
 
   getLocations(mapId: string) {
-    const locationUrl = this.mapsUrl + '/' + mapId + '/locations'
+    const locationUrl = this.mapsUrl + '/' + mapId + '/locations';
     return this.http.get(locationUrl).pipe(
       catchError(this.handleError)
     );
@@ -152,8 +162,37 @@ export class ConfigService {
       'Something bad happened; please try again later.');
   }
 
-  // post 
+  getAnchoredAssets() {
+    return this.http.get(this.mapsUrl).pipe(
+      catchError(this.handleError)
+    );
+  }
 
-  // put for updating
 
+  // ASSETS that are not maps
+  getAssets(type: string) {
+    return this.http.get(this.assetsUrl + '/?asset_type_name=' + type).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  addAsset(data) {
+    return this.http.post(this.assetsUrl, data).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteAsset(idToDelete) {
+    const deleteUrl = this.assetsUrl + '/' + idToDelete;
+    return this.http.delete(deleteUrl).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Can only view existing anchors 
+  getAnchors() {
+    return this.http.get(this.anchorsUrl).pipe(
+      catchError(this.handleError)
+    );
+  }
 }

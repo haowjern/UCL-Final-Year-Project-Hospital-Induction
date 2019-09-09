@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/67b86d31-477d-478f-9988-9da7166c2004/resourceGroups/App-Treasure-Hunt/providers/Microsoft.Web/sites/app-treasure-hunt-server",
+    "appService.deploySubpath": ""
+}

@@ -6,7 +6,7 @@ USE app_mysql;
 
 CREATE TABLE IF NOT EXISTS asset_types (
 	asset_typeID INT AUTO_INCREMENT,
-    asset_type_name VARCHAR(20) NOT NULL,
+    asset_type_name VARCHAR(100) NOT NULL,
     PRIMARY KEY (asset_typeID)
 ) ENGINE=INNODB; 
 
@@ -17,14 +17,17 @@ INSERT INTO asset_types (asset_type_name) VALUES ('map');
 CREATE TABLE IF NOT EXISTS assets (
 	assetID INT AUTO_INCREMENT, 
     asset_typeID INT,
-    asset_name VARCHAR(20) NOT NULL,
+    asset_name VARCHAR(100) NOT NULL,
+    blob_name VARCHAR(100),
+    created_at DATETIME NOT NULL,
+    is_default_map BOOL DEFAULT FALSE,
     PRIMARY KEY (assetID),
     FOREIGN KEY (asset_typeID) REFERENCES asset_types(asset_typeID) ON DELETE SET NULL ON UPDATE CASCADE
 )  ENGINE=INNODB;
 
 CREATE TABLE IF NOT EXISTS scenarios (
 	scenarioID INT AUTO_INCREMENT, 
-	scenario_name VARCHAR(20) NOT NULL,
+	scenario_name VARCHAR(100) NOT NULL,
     PRIMARY KEY (scenarioID)
 ) ENGINE=INNODB; 
 
@@ -49,7 +52,7 @@ CREATE TABLE IF NOT EXISTS task_display_photos (
 
 CREATE TABLE IF NOT EXISTS location_types (
 	location_typeID INT AUTO_INCREMENT, 
-    location_type_name VARCHAR(20) NOT NULL,
+    location_type_name VARCHAR(100) NOT NULL,
     PRIMARY KEY (location_typeID)
 ) ENGINE=INNODB; 
 
@@ -61,29 +64,30 @@ CREATE TABLE IF NOT EXISTS locations (
 	locationID INT AUTO_INCREMENT,
     current_mapID INT NOT NULL,
     location_typeID INT NOT NULL, 
-    location_name VARCHAR(20) NOT NULL,
-    position_on_map JSON NOT NULL, 
+    location_name VARCHAR (100) NOT NULL,
+    rel_position_on_map_x DECIMAL(10,5),
+    rel_position_on_map_y DECIMAL(10,5),
     PRIMARY KEY (locationID), 
     FOREIGN KEY (current_mapID) REFERENCES assets(assetID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (location_typeID) REFERENCES location_types(location_typeID) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB; 
 
 CREATE TABLE IF NOT EXISTS anchors (
-	anchorID INT AUTO_INCREMENT, 
+	anchorNumber INT AUTO_INCREMENT, 
+	anchorID VARCHAR(100), 
     locationID INT,
-    anchor_name VARCHAR(20) NOT NULL,
-    PRIMARY KEY (anchorID),
+    anchor_name VARCHAR(100),
+    PRIMARY KEY (anchorNumber),
     FOREIGN KEY (locationID) REFERENCES locations(locationID) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=INNODB; 
 
 
 CREATE TABLE IF NOT EXISTS anchored_assets (
 	anchored_assetID INT AUTO_INCREMENT,
-    anchorID INT NOT NULL, 
+    anchorNumber INT NOT NULL, 
     assetID INT NOT NULL, 
-    relative_pose JSON NOT NULL,
     PRIMARY KEY (anchored_assetID), 
-    FOREIGN KEY (anchorID) REFERENCES anchors(anchorID) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (anchorNumber) REFERENCES anchors(anchorNumber) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB; 
 
 CREATE TABLE IF NOT EXISTS anchored_assets_tasks (
@@ -116,7 +120,7 @@ CREATE TABLE IF NOT EXISTS location_connection_maps (
 
 CREATE TABLE IF NOT EXISTS user_types (
 	user_typeID INT AUTO_INCREMENT, 
-    user_type_name VARCHAR(20),
+    user_type_name VARCHAR(100),
     PRIMARY KEY (user_typeID)
 ) ENGINE=INNODB;
 
@@ -127,8 +131,8 @@ INSERT INTO user_types (user_type_name) VALUES ('public');
 CREATE TABLE IF NOT EXISTS users (
 	userID INT AUTO_INCREMENT,
     user_typeID INT NOT NULL,
-    user_username VARCHAR(20) NOT NULL,
-    user_password VARCHAR(20) NOT NULL,
+    user_username VARCHAR(100) NOT NULL,
+    user_password VARCHAR(100) NOT NULL,
     PRIMARY KEY (userID), 
     FOREIGN KEY (user_typeID) REFERENCES user_types(user_typeID) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB;
@@ -137,9 +141,9 @@ CREATE TABLE IF NOT EXISTS user_collected_assets (
 	user_collected_assetID INT AUTO_INCREMENT,
     userID INT NOT NULL,
     collected_assetID INT NOT NULL,
-    collected_at_anchorID INT NOT NULL,
+    collected_at_anchorNumber INT NOT NULL,
     PRIMARY KEY (user_collected_assetID), 
     FOREIGN KEY (userID) REFERENCES users(userID) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (collected_assetID) REFERENCES assets(assetID) ON DELETE CASCADE ON UPDATE CASCADE ,
-    FOREIGN KEY (collected_at_anchorID) REFERENCES anchor(anchorID) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (collected_assetID) REFERENCES assets(assetID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (collected_at_anchorNumber) REFERENCES anchors(anchorNumber) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB;

@@ -22,6 +22,7 @@ export class MapsEditFormComponent implements OnInit {
   editMapForm = new FormGroup({
     uploadedMapName: new FormControl(''),
     uploadedMapFile: new FormControl(''),
+    uploadedMapDefault: new FormControl(''),
     selectedEditMap: new FormControl(''),
     selectedMap: new FormControl(''),
     selectedBuilding: new FormControl(''),
@@ -187,12 +188,23 @@ export class MapsEditFormComponent implements OnInit {
   initFormValues() {
     console.log('init form values are: ')
     console.log(this.mapToEdit.asset_name);
+    console.log(this.mapToEdit.is_default_map);
     console.log(this.baseMapId);
     console.log(this.buildingId);
     console.log(this.floorId);
 
+    let defaultMap; 
+    if (this.mapToEdit.is_default_map == 1) {
+      defaultMap = 'true';
+    } else {
+      defaultMap = 'false';
+    }
+
+    console.log('defaultMap variable is: ' + defaultMap);
+
     this.editMapForm.patchValue({
       uploadedMapName: this.mapToEdit.asset_name,
+      uploadedMapDefault: defaultMap,
       // uploadedMapFile:
       selectedMap: this.baseMapId,
       selectedBuilding: this.buildingId,
@@ -453,8 +465,10 @@ export class MapsEditFormComponent implements OnInit {
     console.log('Submitting form');
     const formData = new FormData();
     const mapName = this.editMapForm.get('uploadedMapName').value;
+    const mapDefault = this.editMapForm.get('uploadedMapDefault').value;
     const locationFloorMapID = this.editMapForm.get('selectedFloor').value;
     formData.append('file_name', mapName);
+    formData.append('is_default_map', mapDefault);
     formData.append('file_path', this.selectedFile);
     formData.append('location_floor_mapID', locationFloorMapID);
     formData.append('id', this.mapToEdit.assetID);

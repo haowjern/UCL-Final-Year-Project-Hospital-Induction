@@ -1,0 +1,13 @@
+@import '~@angular/material/theming';
+@include mat-core();
+$mytheme-primary: mat-palette($mat-indigo);
+$mytheme-accent:  mat-palette($mat-blue, 50, 0, A100);
+
+$mytheme-warn:    mat-palette($mat-red);
+
+$mytheme-theme: mat-light-theme($mytheme-primary, $mytheme-accent, $mytheme-warn);
+
+$my-foreground: my-mat-light-theme-foreground(mat-color($mytheme-primary));
+$mytheme-custom: map-merge($mytheme-theme, (foreground: $my-foreground));
+
+@include angular-material-theme($mytheme-custom);

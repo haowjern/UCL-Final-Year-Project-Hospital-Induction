@@ -17,7 +17,7 @@ export class MapsComponent implements OnInit, OnDestroy {
   constructor(private configService: ConfigService) { }
 
   ngOnInit() {
-    this.displayedColumns = ["assetID", "asset_typeID", 'asset_name'];
+    this.displayedColumns = ['assetID', 'asset_type_name', 'asset_name', 'created_at', 'is_default_map'];
 
     this.subscription = this.configService.getMaps().subscribe((res: Response) => {
       this.dataSource = JSON.parse(JSON.stringify(res));

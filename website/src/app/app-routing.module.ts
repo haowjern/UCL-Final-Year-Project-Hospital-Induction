@@ -8,9 +8,10 @@ import { ScenariosComponent } from './scenarios/scenarios.component';
 import { UsersComponent } from './users/users.component';
 import { MapsAddFormComponent } from './maps-add-form/maps-add-form.component';
 import { MapsEditFormComponent } from './maps-edit-form/maps-edit-form.component';
+import { AssetsDeleteComponent } from './assets-delete/assets-delete.component';
 
-const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+export const routes: Routes = [
+  { path: '', redirectTo: '/maps', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'anchors', component: AnchorsComponent },
   { path: 'assets', component: AssetsComponent },
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: 'scenarios', component: ScenariosComponent },
   { path: 'users', component: UsersComponent },
   { path: 'maps/add', component: MapsAddFormComponent },
-  { path: 'maps/edit', component: MapsEditFormComponent }
+  { path: 'maps/edit', component: MapsEditFormComponent },
+  { path: 'assets/delete', component: AssetsDeleteComponent}
 ];
 
 @NgModule({

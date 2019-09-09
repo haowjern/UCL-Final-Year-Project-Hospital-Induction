@@ -1,0 +1,23 @@
+
+/* Application-wide Styles */
+@import 'mytheme.scss';
+
+.dark-button {
+    height: 50px; 
+    width: 150px;
+    font-size: 110%;
+    background-color: #005EB8 !important;
+    color: #FFFFFF !important;
+}
+
+.light-button {
+    height: 50px; 
+    width: 150px;
+    font-size: 110%;
+    border: 1px solid #005EB8 !important;
+}
+
+.button-row {
+    display: flex;
+    position: relative;
+}

@@ -1,14 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, ComponentFactoryResolver } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ConfigService } from '../services/config.service';
 import { FormGroup, FormControl } from '@angular/forms';
-import { LocationFormDirective } from '../directives/location-form.directive';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { LocationFormComponent } from '../location-form/location-form.component';
-import { Position } from '../classes/position';
 import { Location } from '../classes/location';
-import { Map } from '../classes/map';
 import { Router } from '@angular/router';
-import { Building } from '../classes/building';
 import { AddResponse } from '../classes/addResponse';
 
 
@@ -32,6 +28,7 @@ export class MapsAddFormComponent implements OnInit, OnDestroy {
   addMapForm = new FormGroup({
     uploadedMapName: new FormControl(''),
     uploadedMapFile: new FormControl(''),
+    uploadedMapDefault: new FormControl(''),
     selectedMap: new FormControl(''),
     selectedBuilding: new FormControl(''),
     selectedFloor: new FormControl('')
@@ -50,11 +47,8 @@ export class MapsAddFormComponent implements OnInit, OnDestroy {
 
   locations: Location[];
 
-  @ViewChild(LocationFormDirective, {static: true}) appLocationForm: LocationFormDirective;
-
   constructor(
     private configService: ConfigService,
-    private componentFactoryResolver: ComponentFactoryResolver,
     private dialog: MatDialog,
     private router: Router
   ) { }
@@ -100,8 +94,8 @@ export class MapsAddFormComponent implements OnInit, OnDestroy {
 
   async isMap(mapID) {
     // send mapID's get request
-    const isMapSubscription = await this.configService.getMapWithID(mapID).subscribe((res: Response) => {
-      isMapSubscription.unsubscribe();
+    const isMapSubscription = await this.configService.getMapWithID(mapID).subscribe((res) => {
+      // isMapSubscription.unsubscribe();
       const resMap = JSON.parse(JSON.stringify(res))[0]; // response is a list with one element
 
       if (resMap) {
@@ -247,17 +241,6 @@ export class MapsAddFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  // loadPopUpComponent(location) {
-  //   const componentFactory = this.componentFactoryResolver.resolveComponentFactory(location.component);
-  //   const viewContainerRef = this.appLocationForm.viewContainerRef;
-  //   viewContainerRef.clear();
-
-  //   const componentRef = viewContainerRef.createComponent(componentFactory);
-
-  //   return componentRef;
-  //   // (<LocationFormComponent>componentRef.instance).data = item.data; 
-  // }
-
   openLocationDialog(location: Location) {
     return this.dialog.open(LocationFormComponent, {
       width: '500px',
@@ -304,8 +287,11 @@ export class MapsAddFormComponent implements OnInit, OnDestroy {
 
     const formData = new FormData();
     const mapName = this.addMapForm.get('uploadedMapName').value;
+    const mapDefault = this.addMapForm.get('uploadedMapDefault').value;
     const locationFloorMapID = this.addMapForm.get('selectedFloor').value;
+    console.log("Default map: " + mapDefault);
     formData.append('file_name', mapName);
+    formData.append('is_default_map', mapDefault);
     formData.append('file_path', this.selectedFile);
     formData.append('location_floor_mapID', locationFloorMapID);
 
@@ -323,6 +309,10 @@ export class MapsAddFormComponent implements OnInit, OnDestroy {
         lastMapId = res2[0].assetID;
 
         console.log('adding location form data');
+
+        if (this.locations.length === 0) {
+          this.router.navigate(['/maps']);
+        }
 
         for (const location of this.locations) {
 
@@ -364,7 +354,7 @@ export class MapsAddFormComponent implements OnInit, OnDestroy {
                 console.log('added floor ' + floor.floorNumber);
               });
             }
-            this.router.navigate(['/maps'])
+            this.router.navigate(['/maps']);
           }, err => {
             console.log('Cant add locations: ' + err);
           });
